@@ -1,0 +1,146 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="tapio (generated)" id="1617273915273-1">
+        <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-2">
+        <createTable tableName="course">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="coursePK"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-3">
+        <createTable tableName="course_progress">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="course_progressPK"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="course_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-4">
+        <createTable tableName="course_progress_progress">
+            <column name="task_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="progress_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-5">
+        <createTable tableName="course_tasks">
+            <column name="course_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="tasks_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-6">
+        <createTable tableName="curriculum">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="curriculumPK"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-7">
+        <createTable tableName="curriculum_courses">
+            <column name="curriculum_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="courses_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-8">
+        <createTable tableName="task">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="taskPK"/>
+            </column>
+            <column name="content" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-9">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="userPK"/>
+            </column>
+            <column name="email" type="VARCHAR(254)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-10">
+        <createTable tableName="user_courses">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="courses_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-11">
+        <addUniqueConstraint columnNames="email" constraintName="UC_USEREMAIL_COL" tableName="user"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-12">
+        <addUniqueConstraint columnNames="login" constraintName="UC_USERLOGIN_COL" tableName="user"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-13">
+        <addUniqueConstraint columnNames="progress_id" constraintName="UK_7duixjuc6iha324mtxmy7j3d0" tableName="course_progress_progress"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-14">
+        <addUniqueConstraint columnNames="tasks_id" constraintName="UK_7okhnlft8cx4xis86vs67304i" tableName="course_tasks"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-15">
+        <addUniqueConstraint columnNames="courses_id" constraintName="UK_m00phaqxhst585h2m1pwyyep5" tableName="user_courses"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-16">
+        <addUniqueConstraint columnNames="courses_id" constraintName="UK_m85677c8dvem1b1r5549185qr" tableName="curriculum_courses"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-17">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_courses" constraintName="FK4leaja1jtelxjs2iqqk4yuxna" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-18">
+        <addForeignKeyConstraint baseColumnNames="task_id" baseTableName="course_progress_progress" constraintName="FK61t5evmrxm7dgkhyaf6darv0c" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="course_progress" validate="true"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-19">
+        <addForeignKeyConstraint baseColumnNames="courses_id" baseTableName="curriculum_courses" constraintName="FKcddjxrdt9xioinnxse3dw9j1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="course" validate="true"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-20">
+        <addForeignKeyConstraint baseColumnNames="curriculum_id" baseTableName="curriculum_courses" constraintName="FKett5b02xrkf5ysghjku9d0y96" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="curriculum" validate="true"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-21">
+        <addForeignKeyConstraint baseColumnNames="course_id" baseTableName="course_tasks" constraintName="FKok1wain7yhmrhftsyfeejhidt" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="course" validate="true"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-22">
+        <addForeignKeyConstraint baseColumnNames="tasks_id" baseTableName="course_tasks" constraintName="FKopbwrhkrd7n0n6vwtrlu5jv89" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="course_progress" validate="true"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-23">
+        <addForeignKeyConstraint baseColumnNames="progress_id" baseTableName="course_progress_progress" constraintName="FKp5qohutscuo637ycctyyc30g5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="task" validate="true"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-24">
+        <addForeignKeyConstraint baseColumnNames="courses_id" baseTableName="user_courses" constraintName="FKpqyxv5v4pjrvb3rp1ss1fhr38" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="course" validate="true"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1617273915273-25">
+        <addForeignKeyConstraint baseColumnNames="course_id" baseTableName="course_progress" constraintName="FKrc6owopnnsws5xddrk2bsjpee" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="course" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

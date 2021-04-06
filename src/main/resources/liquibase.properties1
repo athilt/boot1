@@ -1,0 +1,7 @@
+changeLogFile=classpath:liquibase/changelog-master.xml
+url=jdbc:mariadb://localhost:3306/boot
+username=boot
+password=boot
+driver=org.mariadb.jdbc.Driver
+referenceUrl=hibernate:spring:com.hiltuprog.boot1.domain?dialect=org.hibernate.dialect.MySQLDialect
+#&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
