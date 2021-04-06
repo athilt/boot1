@@ -1,34 +1,34 @@
 package com.hiltuprog.boot1.web.rest;
 
-import org.springframework.data.domain.Sort;
+//import javax.validation.Valid;
+import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
-import org.springframework.http.ResponseEntity;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
-import org.apache.tomcat.util.http.ResponseUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.hateoas.EntityModel;
 import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
 import com.hiltuprog.boot1.dto.CourseDTO;
 import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.service.CourseService;
-import com.hiltuprog.boot1.service.UserService;
-//import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 //import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -63,6 +63,13 @@ public class CourseResource {
 
     private final Logger log = LoggerFactory.getLogger(CourseResource.class);
 
+
+    private final CourseAssembler assembler;
+
+    CourseResource(CourseAssembler assembler) {
+      this.assembler = assembler;
+    }
+    
     @Value("${boot1.clientApp.name}")
     private String applicationName;
     @Autowired
@@ -83,9 +90,26 @@ public class CourseResource {
         }
     }
     
+	/*
+	 * @CrossOrigin(origins = "*")
+	 * 
+	 * @GetMapping("/courses/{id}") public ResponseEntity<UserDTO> one(@PathVariable
+	 * Long id) { log.info("REST request to get Course : {}", id); return new
+	 * ResponseEntity(courseService.findById(id) .map(CourseDTO::new),
+	 * HttpStatus.OK); }
+	 */
+    
+    @GetMapping("/courses/{id}")
+    EntityModel<CourseDTO> one(@PathVariable Long id) {
+
+      CourseDTO course = new CourseDTO(courseService.findById(id).get()); // .orElseThrow(() -> new Exception(Long.toString(id)));
+
+      return assembler.toModel(course);
+    }
+    
     @CrossOrigin(origins = "*")
     @GetMapping("/courses")
-    public ResponseEntity<UserDTO> getAllCourses() {
+    public ResponseEntity<UserDTO> all() {
         log.info("REST request to get all Courses : {}" + " applicationName: " + applicationName );
         return new ResponseEntity(courseService.findAll().stream()
         		.map(CourseDTO::new).collect(Collectors.toList()), HttpStatus.OK);
@@ -98,15 +122,16 @@ public class CourseResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the course list of the 
      * "login" user, or with status {@code 404 (Not Found)}.
      */
-    @CrossOrigin(origins = "*")
-    @GetMapping("/courses/{userId}")
-    public ResponseEntity<CourseDTO> getCoursesByUser(@PathVariable Long userId) {
-        log.info("REST request to get all courses for User : " + userId );
-        
-        return new ResponseEntity(courseService.getAllByUser(userId).stream()
-        		.map(CourseDTO::new).collect(Collectors.toList()), HttpStatus.OK);
-    }
-    
+	/*
+	 * @CrossOrigin(origins = "*")
+	 * 
+	 * @GetMapping("/courses/{userId}") public ResponseEntity<CourseDTO>
+	 * getCoursesByUser(@PathVariable Long userId) {
+	 * log.info("REST request to get all courses for User : " + userId );
+	 * 
+	 * return new ResponseEntity(courseService.getAllByUser(userId).stream()
+	 * .map(CourseDTO::new).collect(Collectors.toList()), HttpStatus.OK); }
+	 */ 
    //addCourse(CourseDTO) //Creates and adds given Course
     
 
