@@ -98,12 +98,11 @@ public class CourseResource {
 	 * ResponseEntity(courseService.findById(id) .map(CourseDTO::new),
 	 * HttpStatus.OK); }
 	 */
-    
+
+    @CrossOrigin(origins = "*")
     @GetMapping("/courses/{id}")
     EntityModel<CourseDTO> one(@PathVariable Long id) {
-
       CourseDTO course = new CourseDTO(courseService.findById(id).get()); // .orElseThrow(() -> new Exception(Long.toString(id)));
-
       return assembler.toModel(course);
     }
     
