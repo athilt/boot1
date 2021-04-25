@@ -30,6 +30,8 @@ public class Course {
 
 	private String description;
 	
+	//private String foo;
+	
 	@JsonIgnore
 	@ManyToMany
 	@OrderBy("id")

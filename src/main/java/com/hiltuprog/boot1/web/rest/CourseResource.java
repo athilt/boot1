@@ -13,7 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,11 +24,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.hateoas.EntityModel;
+
 import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
 import com.hiltuprog.boot1.dto.CourseDTO;
-import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.service.CourseService;
 
 //import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -108,10 +108,14 @@ public class CourseResource {
     
     @CrossOrigin(origins = "*")
     @GetMapping("/courses")
-    public ResponseEntity<UserDTO> all() {
+    public CollectionModel<EntityModel<CourseDTO>> all() {
         log.info("REST request to get all Courses : {}" + " applicationName: " + applicationName );
-        return new ResponseEntity(courseService.findAll().stream()
-        		.map(CourseDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+        List <EntityModel<CourseDTO>> courseList = courseService.findAll().stream()
+        		.map(CourseDTO::new).map(assembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(courseList);
+        		//linkTo(methodOn)
+        //return new ResponseEntity(courseService.findAll().stream()
+        //		.map(CourseDTO::new).collect(Collectors.toList()), HttpStatus.OK);
     }
    
     /**
