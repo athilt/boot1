@@ -1,0 +1,54 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="tapio (generated)" id="1619632580583-1">
+        <alterSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-2">
+        <alterSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-3">
+        <alterSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-4">
+        <alterSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-5">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="content" tableName="task"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-6">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="content" tableName="task_execution"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-7">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="description" tableName="course"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-8">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="description" tableName="curriculum"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-9">
+        <dropDefaultValue columnDataType="varchar(254)" columnName="email" tableName="user"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-10">
+        <dropDefaultValue columnDataType="varchar(50)" columnName="first_name" tableName="user"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-11">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="foo" tableName="user"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-12">
+        <dropDefaultValue columnDataType="varchar(50)" columnName="last_name" tableName="user"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-13">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="title" tableName="course"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-14">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="title" tableName="course_progress"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-15">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="title" tableName="curriculum"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-16">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="title" tableName="task"/>
+    </changeSet>
+    <changeSet author="tapio (generated)" id="1619632580583-17">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="title" tableName="task_execution"/>
+    </changeSet>
+</databaseChangeLog>

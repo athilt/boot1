@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
 import com.hiltuprog.boot1.dto.CourseDTO;
 
 @Component
-@Relation(collectionRelation = "courses", itemRelation = "course")
-public class CourseAssembler implements RepresentationModelAssembler<CourseDTO, EntityModel<CourseDTO>> {
+public class TaskProgressAssembler implements RepresentationModelAssembler<TaskProgress, EntityModel<TaskProgress>> {
 	@Override
-	public EntityModel<CourseDTO> toModel(CourseDTO course) {
-		EntityModel<CourseDTO> courseModel = EntityModel.of(course, //
-				linkTo(methodOn(CourseResource.class).one(course.getId())).withSelfRel(),
-				linkTo(methodOn(CourseResource.class).all()).withRel("courses"));
-		
-		return courseModel;
+	public EntityModel<TaskProgress> toModel(TaskProgress progress) {
+	
+		EntityModel<TaskProgress> taskProgressModel = EntityModel.of(progress,
+				linkTo(methodOn(TaskProgress.class).one(progress.getId())).withSelfRel(),
+				linkTo(methodOn(TaskProgress.class).all()).withRel("progress"));	
+		return taskProgressModel;
 	}
 }

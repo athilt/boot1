@@ -15,16 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
 import com.hiltuprog.boot1.dto.CourseDTO;
@@ -57,12 +59,11 @@ import com.hiltuprog.boot1.service.CourseService;
  * Another option would be to have a specific JPA entity graph to handle this case.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/courses")
 public class CourseResource {
     private static final List<String> ALLOWED_ORDERED_PROPERTIES = Collections.unmodifiableList(Arrays.asList("id", "login", "firstName", "lastName", "email", "activated", "langKey"));
 
     private final Logger log = LoggerFactory.getLogger(CourseResource.class);
-
 
     private final CourseAssembler assembler;
 
@@ -76,77 +77,58 @@ public class CourseResource {
     private  CourseService courseService;
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/courses")
-    public ResponseEntity<Course> createCourse(@Valid @RequestBody CourseDTO courseDTO) throws Exception {
+    @PostMapping("")
+    public ResponseEntity<Course> create(@Valid @RequestBody CourseDTO courseDTO) throws Exception {
         log.info("REST request to save Course : {}", courseDTO);
-
         if (courseDTO.getId() != null) {
             throw new Exception("A new course cannot already have an ID");
         } else {
             Course newCourse = courseService.createCourse(courseDTO);
-            return ResponseEntity.created(new URI("/api/users/"))
+            return ResponseEntity.created(new URI("/api/courses/"))
                     //.headers(HeaderUtil..createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
                     .body(newCourse);
         }
     }
     
-	/*
-	 * @CrossOrigin(origins = "*")
-	 * 
-	 * @GetMapping("/courses/{id}") public ResponseEntity<UserDTO> one(@PathVariable
-	 * Long id) { log.info("REST request to get Course : {}", id); return new
-	 * ResponseEntity(courseService.findById(id) .map(CourseDTO::new),
-	 * HttpStatus.OK); }
-	 */
+    @CrossOrigin(origins = "*")
+    @PutMapping("")
+    public ResponseEntity<Course> updateCourse(@Valid @RequestBody CourseDTO courseDTO) throws Exception {
+        log.info("REST request to update Course : {}", courseDTO);
+
+        if (courseDTO.getId() == null) {
+            throw new Exception("Course not found.");
+        } else {
+            Course newCourse = courseService.updateCourse(courseDTO);
+            return ResponseEntity.created(new URI("/api/users/"))
+                    //.headers(HeaderUtil..createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
+                    .body(newCourse);
+        }
+    }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/courses/{id}")
-    EntityModel<CourseDTO> one(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public EntityModel<CourseDTO> one(@PathVariable Long id) {
       CourseDTO course = new CourseDTO(courseService.findById(id).get()); // .orElseThrow(() -> new Exception(Long.toString(id)));
       return assembler.toModel(course);
     }
     
     @CrossOrigin(origins = "*")
-    @GetMapping("/courses")
+    @GetMapping("")
     public CollectionModel<EntityModel<CourseDTO>> all() {
         log.info("REST request to get all Courses : {}" + " applicationName: " + applicationName );
         List <EntityModel<CourseDTO>> courseList = courseService.findAll().stream()
         		.map(CourseDTO::new).map(assembler::toModel).collect(Collectors.toList());
-        return CollectionModel.of(courseList);
-        		//linkTo(methodOn)
-        //return new ResponseEntity(courseService.findAll().stream()
-        //		.map(CourseDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+        Link link = WebMvcLinkBuilder.linkTo(CourseResource.class).withSelfRel();
+        return CollectionModel.of(courseList, link);
     }
    
-    /**
-     * {@code GET /courses/:login} : get all courses of "login" user.
-     *
-     * @param login the login of the user to find.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the course list of the 
-     * "login" user, or with status {@code 404 (Not Found)}.
-     */
-	/*
-	 * @CrossOrigin(origins = "*")
-	 * 
-	 * @GetMapping("/courses/{userId}") public ResponseEntity<CourseDTO>
-	 * getCoursesByUser(@PathVariable Long userId) {
-	 * log.info("REST request to get all courses for User : " + userId );
-	 * 
-	 * return new ResponseEntity(courseService.getAllByUser(userId).stream()
-	 * .map(CourseDTO::new).collect(Collectors.toList()), HttpStatus.OK); }
-	 */ 
-   //addCourse(CourseDTO) //Creates and adds given Course
-    
-
-    //addUser(userId)
-    @GetMapping("/courses/adduser/{courseId}/{userId}")
+    @GetMapping("/adduser/{courseId}/{userId}")
     public void addUser(@PathVariable Long courseId, @PathVariable Long userId) throws Exception {
         log.info("REST request to add user " + userId + " to course " + courseId);
         courseService.addUser(courseId, userId);
     }
-    //removeUser(userId)
-    //addTask(TaskDTO)
-    @GetMapping("/courses/addtask/{courseId}/{taskId}")
+
+    @GetMapping("/addtask/{courseId}/{taskId}")
     public void addTask(@PathVariable Long courseId, @PathVariable Long taskId) throws Exception {
         log.info("REST request to add task " + taskId + " to course " + courseId);
         courseService.addTask(courseId, taskId);

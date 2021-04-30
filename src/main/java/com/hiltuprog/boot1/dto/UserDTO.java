@@ -5,11 +5,14 @@ import java.util.List;
 import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
 
+import lombok.Getter;
+
 //import javax.validation.constraints.Size;
 
 /**
  * A DTO representing a user, with his authorities.
  */
+@Getter
 public class UserDTO {
 
     private Long id;
@@ -28,38 +31,23 @@ public class UserDTO {
     }
 
     public UserDTO(User u) {
+    	this.id = u.getId();
         this.login = u.getLogin();
         this.firstName = u.getFirstName();
         this.lastName = u.getLastName();
         this.email = u.getEmail();
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
     }
 
     public void setLogin(String login) {
         this.login = login;
     }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
+   
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 
     public void setLastName(String lastName) {
@@ -71,6 +59,10 @@ public class UserDTO {
     	
     }
     
+    public Long getId()
+    {
+    	return 1L;
+    }
 
     // prettier-ignore
     @Override

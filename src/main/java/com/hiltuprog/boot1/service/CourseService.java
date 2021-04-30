@@ -45,16 +45,6 @@ public class CourseService {
     @Autowired
     private TaskService taskService;
 
-    //private final PasswordEncoder passwordEncoder;
-
-    //private final UserSearchRepository userSearchRepository;
-
-    //private final PersistentTokenRepository persistentTokenRepository;
-
-   // private final AuthorityRepository authorityRepository;
-
-    //private final CacheManager cacheManager;
-
     public CourseService(CourseRepository courseRepository) { //, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
         this.courseRepository = courseRepository;
     }
@@ -77,6 +67,15 @@ public class CourseService {
         courseRepository.save(course);
         
         log.debug("Created Course: ", course);
+        return course;
+    }
+    
+    public Course updateCourse(CourseDTO courseDTO) {
+    	Course course = new Course();
+    	course.setTitle(courseDTO.getTitle());
+        course.setDescription(courseDTO.getDescription());
+        //ourseRepository.update(course);
+        log.debug("Updated Course: ", course);
         return course;
     }
     

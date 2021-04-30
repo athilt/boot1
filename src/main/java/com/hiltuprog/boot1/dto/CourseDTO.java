@@ -34,7 +34,6 @@ public class CourseDTO {
     public CourseDTO() {
         // Empty constructor needed for Jackson.
     }
-
     public CourseDTO(Course c) {
     	this.id = c.getId();
         this.title = c.getTitle();

@@ -14,6 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
+import com.hiltuprog.boot1.dto.CourseDTO;
 import com.hiltuprog.boot1.dto.CurriculumDTO;
 import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.repository.UserRepository;
@@ -59,7 +65,7 @@ import com.hiltuprog.boot1.service.UserService;
  * Another option would be to have a specific JPA entity graph to handle this case.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserResource {
     private static final List<String> ALLOWED_ORDERED_PROPERTIES = Collections.unmodifiableList(Arrays.asList("id"));
 
@@ -70,35 +76,26 @@ public class UserResource {
 
     @Autowired
     private  UserService userService;
+    
+    private final UserAssembler assembler;
+
+    UserResource(UserAssembler assembler) {
+      this.assembler = assembler;
+    }
 
     @Autowired UserRepository userRepository;
     
-    /**
-     * {@code POST  /users}  : Creates a new user.
-     * <p>
-     * Creates a new user if the login and email are not already used, and sends an
-     * mail with an activation link.
-     * The user needs to be activated on creation.
-     *
-     * @param userDTO the user to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already in use.
-     */
-    @PostMapping("/users")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws Exception {
+    @CrossOrigin(origins = "*")
+    @PostMapping("")
+    public ResponseEntity<User> create(@Valid @RequestBody UserDTO userDTO) throws Exception {
         log.info("REST request to save User : {}", userDTO.toString());
-
         if (userDTO.getId() != null) {
             throw new Exception("A new user cannot already have an ID");
-            // Lowercase the user login before comparing with database
-        } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
-            throw new Exception("Already present");
         } else {
             User newUser = userService.createUser(userDTO);
-            return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
-                //.headers(HeaderUtil.createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
-                .body(newUser);
+            return ResponseEntity.created(new URI("/api/users/"))
+                    //.headers(HeaderUtil..createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
+                    .body(newUser);
         }
     }
 
@@ -123,18 +120,20 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @CrossOrigin(origins = "*")
-    @GetMapping("/users/byid{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public EntityModel<UserDTO> one(@PathVariable Long id) {
         log.info("REST request to get User : {}", id);
-        return new ResponseEntity(userService.findById(id)
-        .map(UserDTO::new), HttpStatus.OK);
+        UserDTO user = new UserDTO(userService.findById(id).get()); // .orElseThrow(() -> new Exception(Long.toString(id)));
+        return assembler.toModel(user);
     }
     
     @CrossOrigin(origins = "*")
-    @GetMapping("/users")
-    public ResponseEntity<UserDTO> getAllUsers() {
-        log.info("REST request to get all Users : {}");
-        return new ResponseEntity(userService.findAll().stream()
-        		.map(UserDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+    @GetMapping("")
+    public CollectionModel<EntityModel<UserDTO>> all() {
+    	log.info("REST request to get all users : {}" + " applicationName: " + applicationName );
+        List <EntityModel<UserDTO>> userList = userService.findAll().stream()
+        		.map(UserDTO::new).map(assembler::toModel).collect(Collectors.toList());
+        Link link = WebMvcLinkBuilder.linkTo(UserResource.class).withSelfRel();
+        return CollectionModel.of(userList, link);
     }
 }

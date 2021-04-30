@@ -24,6 +24,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User {
+	
+	String foo;
+	
 	@Id
     @GeneratedValue
 	private Long id;

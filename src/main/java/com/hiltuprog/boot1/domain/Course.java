@@ -12,6 +12,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.springframework.hateoas.server.core.Relation;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
@@ -21,6 +23,7 @@ import lombok.Setter;
 @Table(name="course")
 @Getter
 @Setter
+@Relation(collectionRelation="courses")
 public class Course {
 	@Id
     @GeneratedValue

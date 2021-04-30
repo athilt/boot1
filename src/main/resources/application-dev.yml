@@ -23,6 +23,7 @@ spring:
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev #, faker
+    change-log: classpath:config/liquibase/master.xml
   jpa:
     show-sql: true
   server:
