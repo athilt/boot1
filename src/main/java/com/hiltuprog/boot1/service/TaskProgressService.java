@@ -1,5 +1,6 @@
 package com.hiltuprog.boot1.service;
 
+import java.util.List;
 import java.util.Optional;
 
 //import io.github.jhipster.security.RandomUtil;
@@ -10,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.TaskProgress;
+import com.hiltuprog.boot1.dto.TaskProgressDTO;
 import com.hiltuprog.boot1.repository.TaskProgressRepository;
 
 /**
@@ -27,8 +30,21 @@ public class TaskProgressService {
     public TaskProgressService(TaskProgressRepository taskProgressRepository) {
 		this.taskProgressRepository = taskProgressRepository;
 	}
+    
+    public TaskProgress create(TaskProgressDTO dto)
+    {
+    	TaskProgress taskProgress = new TaskProgress();
+    	taskProgress.setTitle(dto.getTitle());
+    	taskProgress.setContent(dto.getContent());
+    	taskProgressRepository.save(taskProgress);
+    	return taskProgress;
+    }
 
-	public Optional<TaskProgress> findOneById(Long id) {
-		return taskProgressRepository.findOneById(id);
+    public List<TaskProgress> findAll() {
+	     return taskProgressRepository.findAll(); 
+	  }
+    
+	public Optional<TaskProgress> findById(Long id) {
+		return taskProgressRepository.findById(id);
 	}
 }

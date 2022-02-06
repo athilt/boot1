@@ -21,6 +21,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 	
 	Optional<Course> findOneById(Long courseId);
 	
-	//Optional<Course> update(Course course);
+	//Optional<Course> save(Course course);
 	
 }

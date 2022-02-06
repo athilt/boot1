@@ -1,5 +1,6 @@
 package com.hiltuprog.boot1.service;
 
+import java.util.List;
 import java.util.Optional;
 
 //import io.github.jhipster.security.RandomUtil;
@@ -11,7 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hiltuprog.boot1.domain.Task;
+import com.hiltuprog.boot1.domain.TaskProgress;
+import com.hiltuprog.boot1.domain.User;
 import com.hiltuprog.boot1.dto.TaskDTO;
+import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.repository.TaskRepository;
 
 /**
@@ -25,22 +29,26 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    //private final PasswordEncoder passwordEncoder;
-
-    //private final UserSearchRepository userSearchRepository;
-
-    //private final PersistentTokenRepository persistentTokenRepository;
-
-   // private final AuthorityRepository authorityRepository;
-
-    //private final CacheManager cacheManager;
-
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
     
+    public List<Task> findAll() {
+	     return taskRepository.findAll(); 
+	  }
+    
     public Optional<Task> findById(Long id)
     {
-    	return taskRepository.findOneById(id);
+    	return taskRepository.findById(id);
     }
+    
+    public Task create(TaskDTO dto) {
+        Task task = new Task();
+        task.setId(dto.getId());
+        task.setTitle(dto.getTitle());
+        taskRepository.save(task);
+        log.debug("Saved task: {}", task);
+        return task;
+    }
+    
 }

@@ -49,4 +49,10 @@ public class Course {
 	@ManyToMany
 	@OrderBy("id")
 	private  List<Task> tasks;
+	
+	@Override
+    public String toString()
+    {
+    	return ("title: " + title);
+    }
 }

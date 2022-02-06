@@ -4,14 +4,16 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-
+import javax.persistence.JoinColumn;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 //import com.mycompany.myapp.domain.PersistentToken;
 import com.sun.istack.NotNull;
@@ -56,8 +58,11 @@ public class User {
     private String email;
     
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @OrderBy("id")
+    @JoinTable(
+    		  name = "course_users", 
+    		  joinColumns = @JoinColumn(name = "users_id"), 
+    		  inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> courses;
- 
 }

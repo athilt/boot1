@@ -1,5 +1,6 @@
 package com.hiltuprog.boot1.service;
 
+import java.util.List;
 import java.util.Optional;
 
 //import io.github.jhipster.security.RandomUtil;
@@ -10,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hiltuprog.boot1.domain.Task;
 import com.hiltuprog.boot1.domain.TaskExecution;
+import com.hiltuprog.boot1.dto.TaskDTO;
+import com.hiltuprog.boot1.dto.TaskExecutionDTO;
 import com.hiltuprog.boot1.repository.TaskExecutionRepository;
 
 /**
@@ -28,8 +32,19 @@ public class TaskExecutionService {
 		this.taskExecutionRepository = taskExecutionRepository;
 	}
 
-	public Optional<TaskExecution> findOneById(Long id) {
-		return taskExecutionRepository.findOneById(id);
+	public Optional<TaskExecution> findById(Long id) {
+		return taskExecutionRepository.findById(id);
 	}
-	
+
+	public List<TaskExecution> findAll() {
+	     return taskExecutionRepository.findAll(); 
+	  }
+   
+   public TaskExecution create(TaskExecutionDTO dto) {
+       TaskExecution taskExecution = new TaskExecution();
+       taskExecution.setId(dto.getId());
+       taskExecution.setTitle(dto.getTitle());
+       log.debug("Saved taskExecution: {}", taskExecution);
+       return taskExecution;
+   }
 }

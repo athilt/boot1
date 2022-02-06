@@ -16,5 +16,4 @@ import com.hiltuprog.boot1.domain.User;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    Optional<Task> findOneById(Long id);
 }

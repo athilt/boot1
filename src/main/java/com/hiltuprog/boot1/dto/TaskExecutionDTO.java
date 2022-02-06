@@ -28,8 +28,8 @@ public class TaskExecutionDTO {
     public TaskExecutionDTO(TaskExecution t) {
     	this.id = t.getId();
         this.title = t.getTitle();
-        this.content = t.getContent();
     }
+
     @Override
     public String toString() {
         return "TaskExecutionDTO {" +

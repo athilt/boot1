@@ -32,13 +32,14 @@ public class TaskDTO {
 
     private String title;
 
-    private String descriprion;
+    private String description;
     
     public TaskDTO() {
         // Empty constructor needed for Jackson.
     }
 
     public TaskDTO(Task t) {
-        
+        this.id = t.getId();
+        this.title = t.getTitle();
     }
 }

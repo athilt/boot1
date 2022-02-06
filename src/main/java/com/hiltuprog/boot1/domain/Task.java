@@ -19,10 +19,12 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name="course_progress")
+@Table(name="task")
 @Getter
+@Setter
 public class Task {
 	@Id
     @GeneratedValue

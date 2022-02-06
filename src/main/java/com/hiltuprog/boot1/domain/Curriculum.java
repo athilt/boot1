@@ -29,8 +29,8 @@ public class Curriculum {
 	
 	@ManyToMany
 	//@JoinTable(
-	//		  name = "curriculum_course", 
-	//		  joinColumns = @JoinColumn(name = "curriculum_id"), 
+	//		  name = "course_curriculums", 
+	//		  joinColumns = @JoinColumn(name = "curriculums_id"), 
 	//		  inverseJoinColumns = @JoinColumn(name = "course_id"))
 	@OrderBy("id")
 	private List<Course> courses;

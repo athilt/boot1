@@ -35,65 +35,66 @@ import com.hiltuprog.boot1.repository.UserRepository;
 @Transactional
 public class CourseService {
 
-    private final Logger log = LoggerFactory.getLogger(CourseService.class);
+	private final Logger log = LoggerFactory.getLogger(CourseService.class);
 
-    private final CourseRepository courseRepository;
-    
-    @Autowired
-    private UserService userService;
-    
-    @Autowired
-    private TaskService taskService;
+	private final CourseRepository courseRepository;
 
-    public CourseService(CourseRepository courseRepository) { //, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
-        this.courseRepository = courseRepository;
-    }
-    
-	
-	 public List<Course> getAllByUser(Long id) {
-	     return courseRepository.findByUsersId(id); 
-	  }
-	
-	 public Optional<Course> findById(Long courseId)
-	 {
-		 return courseRepository.findOneById(courseId);
-	 }
-    
-    public Course createCourse(CourseDTO courseDTO) {
-        Course course = new Course();
-        course.setTitle(courseDTO.getTitle());
-        course.setDescription(courseDTO.getDescription());
-        
-        courseRepository.save(course);
-        
-        log.debug("Created Course: ", course);
-        return course;
-    }
-    
-    public Course updateCourse(CourseDTO courseDTO) {
-    	Course course = new Course();
-    	course.setTitle(courseDTO.getTitle());
-        course.setDescription(courseDTO.getDescription());
-        //ourseRepository.update(course);
-        log.debug("Updated Course: ", course);
-        return course;
-    }
-    
-    public void addUser(Long courseId, Long userId)
-	{
-		//TODO: Some error checking, please!
-		courseRepository.findById(courseId).get()
-		.getUsers().add(userService.findById(userId).get());
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private TaskService taskService;
+
+	public CourseService(CourseRepository courseRepository) { // , PasswordEncoder passwordEncoder, UserSearchRepository
+																// userSearchRepository, PersistentTokenRepository
+																// persistentTokenRepository, AuthorityRepository
+																// authorityRepository, CacheManager cacheManager) {
+		this.courseRepository = courseRepository;
 	}
-    
-    public void addTask(Long courseId, Long taskId)
-    {
-    	courseRepository.findById(courseId).get()
-		.getTasks().add(taskService.findById(taskId).get());
-    }
-    
-    public List<Course> findAll()
-    {
-    	return courseRepository.findAll();
-    }
+
+	public Optional<Course> findById(Long courseId) {
+		return courseRepository.findOneById(courseId);
+	}
+
+	public Course createCourse(CourseDTO courseDTO) {
+		Course course = new Course();
+		course.setTitle(courseDTO.getTitle());
+		course.setDescription(courseDTO.getDescription());
+
+		courseRepository.save(course);
+
+		log.debug("Created Course: ", course);
+		return course;
+	}
+
+	public Course updateCourse(CourseDTO courseDTO) {
+		Course course = new Course();
+		course.setId(courseDTO.getId());
+		course.setTitle(courseDTO.getTitle());
+		course.setDescription(courseDTO.getDescription());
+		courseRepository.save(course);
+		log.debug("Updated Course: ", course);
+		return course;
+	}
+
+	public Course deleteCourse(CourseDTO courseDTO) {
+		Course course = new Course();
+		course.setId(courseDTO.getId());
+		courseRepository.delete(course);
+		log.debug("Delete Course: ", course);
+		return course;
+	}
+
+	public void addUser(Long courseId, Long userId) {
+		// TODO: Some error checking, please!
+		courseRepository.findById(courseId).get().getUsers().add(userService.findById(userId).get());
+	}
+
+	public void addTask(Long courseId, Long taskId) {
+		courseRepository.findById(courseId).get().getTasks().add(taskService.findById(taskId).get());
+	}
+
+	public List<Course> findAll() {
+		return courseRepository.findAll();
+	}
 }

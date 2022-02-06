@@ -6,6 +6,7 @@ import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
 
 import lombok.Getter;
+import lombok.Setter;
 
 //import javax.validation.constraints.Size;
 
@@ -13,6 +14,7 @@ import lombok.Getter;
  * A DTO representing a user, with his authorities.
  */
 @Getter
+@Setter
 public class UserDTO {
 
     private Long id;
@@ -24,6 +26,8 @@ public class UserDTO {
     private String lastName;
     
     private String email;
+    
+    private List<Course> courses;
         
 
     public UserDTO() {
@@ -36,8 +40,9 @@ public class UserDTO {
         this.firstName = u.getFirstName();
         this.lastName = u.getLastName();
         this.email = u.getEmail();
+        this.courses = u.getCourses();
     }
-
+/*
     public void setId(Long id) {
         this.id = id;
     }
@@ -53,7 +58,7 @@ public class UserDTO {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+    */
     public void addCourse(Course c)
     {
     	
@@ -61,7 +66,7 @@ public class UserDTO {
     
     public Long getId()
     {
-    	return 1L;
+    	return id;
     }
 
     // prettier-ignore

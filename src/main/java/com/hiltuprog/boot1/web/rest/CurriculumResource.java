@@ -30,7 +30,7 @@ import com.hiltuprog.boot1.dto.CurriculumDTO;
 import com.hiltuprog.boot1.service.CurriculumService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/curriculums")
 public class CurriculumResource {
     private static final List<String> ALLOWED_ORDERED_PROPERTIES = Collections.unmodifiableList(Arrays.asList("id"));
     private final Logger log = LoggerFactory.getLogger(CurriculumResource.class);
@@ -42,7 +42,7 @@ public class CurriculumResource {
     private CurriculumService curriculumService;
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/curriculums/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CurriculumDTO> getCurriculum(@PathVariable Long id) {
         log.info("REST request to get Curriculum : {}", id);
         return new ResponseEntity(curriculumService.findOneById(id)
@@ -50,14 +50,14 @@ public class CurriculumResource {
     }
     
     @CrossOrigin(origins = "*")
-    @GetMapping("/curriculums")
+    @GetMapping("")
     public ResponseEntity<CurriculumDTO> getAllCurriculums() {
         log.info("REST request to get all Curriculums : {}");
         return new ResponseEntity(curriculumService.findAll().stream()
         		.map(CurriculumDTO::new).collect(Collectors.toList()), HttpStatus.OK);
     }
     
-    @PostMapping("/curriculums")
+    @PostMapping("")
     public ResponseEntity<Curriculum> createCurriculum(@Valid @RequestBody CurriculumDTO curriculumDTO) throws Exception {
         log.info("REST request to create Curriculum : {}", curriculumDTO);
 
@@ -72,13 +72,13 @@ public class CurriculumResource {
     }
     
     //addCourse(CourseDTO) //Creates and adds given Course
-    @GetMapping("/curriculums/addcourse/{curriculumId}/{courseId}")
+    @GetMapping("/addcourse/{curriculumId}/{courseId}")
     public void addCourse(@PathVariable Long curriculumId, @PathVariable Long courseId) throws Exception {
     	curriculumService.addCourse(curriculumId, courseId);
     }
     
     //Modify curriculum; This is currently is a stub.
-    @PutMapping("/curriculums")
+    @PutMapping("")
     public void modify(@PathVariable Long curriculumId, @PathVariable Long courseId) throws Exception {
     	curriculumService.addCourse(curriculumId, courseId);
     }

@@ -17,6 +17,7 @@ import com.hiltuprog.boot1.domain.Course;
 //import com.hiltuprog.boot1.domain.Authority;
 import com.hiltuprog.boot1.domain.User;
 import com.hiltuprog.boot1.dto.UserDTO;
+import com.hiltuprog.boot1.repository.CourseRepository;
 //import com.hiltuprog.boot1.repository.AuthorityRepository;
 //import com.hiltuprog.boot1.repository.PersistentTokenRepository;
 import com.hiltuprog.boot1.repository.UserRepository;
@@ -34,7 +35,10 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
+    //private final CourseRepository courseRepository;
+
     
     @Autowired
     CourseService courseService;
@@ -49,8 +53,8 @@ public class UserService {
 
     //private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository) { //, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
-        this.userRepository = userRepository;
+    public UserService() { //, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+        //this.userRepository = userRepository;
         //this.passwordEncoder = passwordEncoder;
         //this.userSearchRepository = userSearchRepository;
         //this.persistentTokenRepository = persistentTokenRepository;
@@ -70,8 +74,14 @@ public class UserService {
     
     public List<User> findAll()
     {
-    	return userRepository.findAll();
+    	List<User> userList = userRepository.findAll();
+    	User user0 = userList.get(0);
+    	log.info("User0: " + user0.toString());
+    	log.info("Courses: " + userList.get(0).getCourses().toString());
+    	return userList;
     }
+    
+    
 /*
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -160,11 +170,11 @@ public class UserService {
         return true;
     }
 */
-    public User createUser(UserDTO userDTO) {
+    public User create(UserDTO dto) {
         User user = new User();
-        user.setLogin(userDTO.getLogin().toLowerCase());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
+        user.setLogin(dto.getLogin().toLowerCase());
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
         user.setPassword("012345678901234567890123456789012345678901234567890123456789");
         //if (userDTO.getEmail() != null) {
         //    user.setEmail(userDTO.getEmail().toLowerCase());

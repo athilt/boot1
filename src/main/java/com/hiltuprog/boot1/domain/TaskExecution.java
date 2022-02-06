@@ -6,12 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-//@Table(name="task_execution")
+@Table(name="task_execution")
 @Getter
+@Setter
 public class TaskExecution {
 	@Id
     @GeneratedValue
@@ -19,7 +22,7 @@ public class TaskExecution {
 	
 	private String title;
 	
-	private String content; //rename to description
+	private String description;
 	
     private LocalDate created;
     

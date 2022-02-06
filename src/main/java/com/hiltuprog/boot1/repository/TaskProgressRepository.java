@@ -17,5 +17,5 @@ import com.hiltuprog.boot1.domain.User;
 @Repository
 public interface TaskProgressRepository extends JpaRepository<TaskProgress, Long> {
 
-    Optional<TaskProgress> findOneById(Long id);
+    //Optional<TaskProgress> findOneById(Long id);
 }

@@ -12,10 +12,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name="task")
+@Table(name="task_progress")
 @Getter
+@Setter
 public class TaskProgress {
 	@Id
     @GeneratedValue

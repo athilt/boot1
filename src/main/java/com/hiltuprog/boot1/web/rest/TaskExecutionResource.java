@@ -21,7 +21,7 @@ import com.hiltuprog.boot1.dto.TaskExecutionDTO;
 import com.hiltuprog.boot1.service.TaskExecutionService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/taskexecution")
 public class TaskExecutionResource {
     private static final List<String> ALLOWED_ORDERED_PROPERTIES = Collections.unmodifiableList(Arrays.asList("id"));
 
@@ -36,9 +36,16 @@ public class TaskExecutionResource {
     @GetMapping("/execution/{id}")
     public ResponseEntity<TaskExecutionDTO> getTaskExecution(@PathVariable Long id) {
         log.info("REST request to get TaskExecution : {}", id);
-        return new ResponseEntity(taskExecutionService.findOneById(id)
+        return new ResponseEntity(taskExecutionService.findById(id)
         .map(TaskExecutionDTO::new), HttpStatus.OK);
      }
+    /*
+    @GetMapping("/begin/{courseId}/{userId}")
+	public void begin(@PathVariable Long courseId, @PathVariable Long userId) throws Exception {
+		log.info("REST request begin executing task for user " + userId + " in course " + courseId);
+		courseService.begin(courseId, userId);
+	}
+	*/
     //addTaskProgress(TaskProgressDTO)
     //getAllTaskProgresses(taskExecutionId)
     //getTaskProgresses(taskExecutionId, startDate, endDate)

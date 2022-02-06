@@ -1,7 +1,6 @@
 package com.hiltuprog.boot1.web.rest;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.apache.tomcat.util.http.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +28,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
-import com.hiltuprog.boot1.dto.CourseDTO;
-import com.hiltuprog.boot1.dto.CurriculumDTO;
 import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.repository.UserRepository;
+import com.hiltuprog.boot1.service.CourseService;
 import com.hiltuprog.boot1.service.UserService;
 
 //import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -77,22 +73,43 @@ public class UserResource {
     @Autowired
     private  UserService userService;
     
+    //@Autowired
+    //UserRepository userRepository;
+
+    
+    @Autowired
+    private  CourseService courseService;
+    
     private final UserAssembler assembler;
 
     UserResource(UserAssembler assembler) {
       this.assembler = assembler;
     }
 
-    @Autowired UserRepository userRepository;
+    @CrossOrigin(origins = "*")
+    @GetMapping("/joincourse/{courseId}/{userId}")
+    public void joinCourse(@PathVariable Long courseId, @PathVariable Long userId) throws Exception {
+        log.info("REST request to add user " + userId + " to course " + courseId);
+        courseService.addUser(courseId, userId);
+    }
+    
+    @CrossOrigin(origins = "*")
+    @GetMapping("/courses/{userId}")
+    public void courses(@PathVariable Long userId) throws Exception {
+        log.info("REST request to get courses " + userId);
+        //userService.getCourses(userId, userId);
+    }
+    
+
     
     @CrossOrigin(origins = "*")
     @PostMapping("")
     public ResponseEntity<User> create(@Valid @RequestBody UserDTO userDTO) throws Exception {
-        log.info("REST request to save User : {}", userDTO.toString());
+        log.info("REST request to create User : {}", userDTO.toString());
         if (userDTO.getId() != null) {
             throw new Exception("A new user cannot already have an ID");
         } else {
-            User newUser = userService.createUser(userDTO);
+            User newUser = userService.create(userDTO);
             return ResponseEntity.created(new URI("/api/users/"))
                     //.headers(HeaderUtil..createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
                     .body(newUser);

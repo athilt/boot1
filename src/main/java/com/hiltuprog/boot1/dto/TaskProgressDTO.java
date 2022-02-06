@@ -19,7 +19,7 @@ public class TaskProgressDTO {
 
     private String title;
 
-    private String description;
+    private String content;
     
     public TaskProgressDTO() {
         // Empty constructor needed for Jackson.
@@ -28,13 +28,13 @@ public class TaskProgressDTO {
     public TaskProgressDTO(TaskProgress t) {
     	this.id = t.getId();
         this.title = t.getTitle();
-        this.description = t.getContent();
+        this.content = t.getContent();
     }
     @Override
     public String toString() {
         return "TaskProgressDTO {" +
         	"title=" + title +
-            "description=" + description + 
+            "content=" + content + 
             "}";
     }
 }
