@@ -135,13 +135,13 @@ public class CourseResource {
 		Link link = WebMvcLinkBuilder.linkTo(CourseResource.class).withSelfRel();
 		return CollectionModel.of(items, link);
 	}
-
+/*
 	@GetMapping("/adduser/{courseId}/{userId}")
 	public void addUser(@PathVariable Long courseId, @PathVariable Long userId) throws Exception {
 		log.info("REST request to add user " + userId + " to course " + courseId);
 		courseService.addUser(courseId, userId);
 	}
-
+*/
 	@GetMapping("/addtask/{courseId}/{taskId}")
 	public void addTask(@PathVariable Long courseId, @PathVariable Long taskId) throws Exception {
 		log.info("REST request to add task " + taskId + " to course " + courseId);

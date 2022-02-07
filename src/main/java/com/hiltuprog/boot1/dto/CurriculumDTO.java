@@ -1,5 +1,8 @@
 package com.hiltuprog.boot1.dto;
 
+import java.util.List;
+
+import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.Curriculum;
 
 import lombok.Getter;
@@ -20,6 +23,8 @@ public class CurriculumDTO {
 
     private String description;
     
+    private List<Course> courses;
+    
     public CurriculumDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -28,6 +33,7 @@ public class CurriculumDTO {
         this.id = c.getId();
         this.title = c.getTitle();
         this.description = c.getDescription();
+        this.courses = c.getCourses();
     }
     
     @Override

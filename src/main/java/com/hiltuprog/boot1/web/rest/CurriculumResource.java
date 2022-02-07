@@ -57,6 +57,7 @@ public class CurriculumResource {
         		.map(CurriculumDTO::new).collect(Collectors.toList()), HttpStatus.OK);
     }
     
+    @CrossOrigin(origins = "*")
     @PostMapping("")
     public ResponseEntity<Curriculum> createCurriculum(@Valid @RequestBody CurriculumDTO curriculumDTO) throws Exception {
         log.info("REST request to create Curriculum : {}", curriculumDTO);
@@ -70,7 +71,8 @@ public class CurriculumResource {
                     .body(newCurriculum);
         }
     }
-    
+ 
+    @CrossOrigin(origins = "*")
     //addCourse(CourseDTO) //Creates and adds given Course
     @GetMapping("/addcourse/{curriculumId}/{courseId}")
     public void addCourse(@PathVariable Long curriculumId, @PathVariable Long courseId) throws Exception {

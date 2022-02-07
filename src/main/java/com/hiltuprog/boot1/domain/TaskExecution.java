@@ -1,11 +1,13 @@
 package com.hiltuprog.boot1.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -31,4 +33,7 @@ public class TaskExecution {
     
     @ManyToOne
     private Task task;
+    
+    @OneToMany
+    private List<TaskProgress> progress;
 }

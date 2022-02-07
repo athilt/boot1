@@ -28,7 +28,4 @@ public class TaskProgress {
 	private String content;
 	
     private LocalDate created;
-    
-    @ManyToOne
-    private TaskExecution taskExecution;
 }

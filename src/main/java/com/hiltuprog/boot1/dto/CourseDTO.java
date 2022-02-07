@@ -7,6 +7,7 @@ package com.hiltuprog.boot1.dto;
 
 //import javax.validation.constraints.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,9 @@ public class CourseDTO {
     private String title;
 
     private String description;
-
+    
+    private List<User> users;
+ 
     public CourseDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -38,6 +41,7 @@ public class CourseDTO {
     	this.id = c.getId();
         this.title = c.getTitle();
         this.description = c.getDescription();
+        //this.users = c.getUsers();
     }
     @Override
     public String toString() {

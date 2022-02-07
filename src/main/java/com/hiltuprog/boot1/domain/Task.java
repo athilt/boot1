@@ -34,9 +34,9 @@ public class Task {
 	
     private LocalDate created;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	private Set<Course> courses;
-	
+	@OneToMany
+	private List<TaskExecution> taskExecutions;
+
 	//@OneToOne(cascade = CascadeType.ALL) 
 	//private TaskExecution taskExecution;
 }

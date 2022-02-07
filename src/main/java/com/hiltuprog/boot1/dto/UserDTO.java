@@ -40,7 +40,7 @@ public class UserDTO {
         this.firstName = u.getFirstName();
         this.lastName = u.getLastName();
         this.email = u.getEmail();
-        this.courses = u.getCourses();
+        //this.courses = u.getCourses();
     }
 /*
     public void setId(Long id) {

@@ -1,6 +1,7 @@
 package com.hiltuprog.boot1.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,12 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hiltuprog.boot1.domain.Course;
+import com.hiltuprog.boot1.domain.Task;
+import com.hiltuprog.boot1.domain.TaskExecution;
 //import com.hiltuprog.boot1.config.Constants;
 //import com.hiltuprog.boot1.domain.Authority;
 import com.hiltuprog.boot1.domain.User;
 import com.hiltuprog.boot1.dto.CourseDTO;
 import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.repository.CourseRepository;
+import com.hiltuprog.boot1.repository.TaskExecutionRepository;
+import com.hiltuprog.boot1.repository.TaskRepository;
 //import com.hiltuprog.boot1.repository.AuthorityRepository;
 //import com.hiltuprog.boot1.repository.PersistentTokenRepository;
 import com.hiltuprog.boot1.repository.UserRepository;
@@ -43,7 +48,7 @@ public class CourseService {
 	private UserService userService;
 
 	@Autowired
-	private TaskService taskService;
+	private TaskRepository taskRepository;
 
 	public CourseService(CourseRepository courseRepository) { // , PasswordEncoder passwordEncoder, UserSearchRepository
 																// userSearchRepository, PersistentTokenRepository
@@ -60,9 +65,12 @@ public class CourseService {
 		Course course = new Course();
 		course.setTitle(courseDTO.getTitle());
 		course.setDescription(courseDTO.getDescription());
-
+		// This is the light version.Create implicit task:
+		Task task = new Task();
+		task.setTitle(course.getTitle());
+		task = taskRepository.save(task);
+		course.setTasks(Arrays.asList(task));
 		courseRepository.save(course);
-
 		log.debug("Created Course: ", course);
 		return course;
 	}
@@ -84,14 +92,22 @@ public class CourseService {
 		log.debug("Delete Course: ", course);
 		return course;
 	}
-
+/*
 	public void addUser(Long courseId, Long userId) {
 		// TODO: Some error checking, please!
-		courseRepository.findById(courseId).get().getUsers().add(userService.findById(userId).get());
+		Course course = courseRepository.findById(courseId).get();
+		User user = userService.findById(userId).get();
+		course.getUsers().add(user);
+		// This is the light version.Create use implicit, create implicit TaskExecution:
+		Task task = course.getTasks().get(0);
+		TaskExecution te = new TaskExecution();
+		te.setTask(task);
+		te.setUser(user);
+		taskExecutionRepository.save(te);
 	}
-
+*/
 	public void addTask(Long courseId, Long taskId) {
-		courseRepository.findById(courseId).get().getTasks().add(taskService.findById(taskId).get());
+		courseRepository.findById(courseId).get().getTasks().add(taskRepository.findById(taskId).get());
 	}
 
 	public List<Course> findAll() {

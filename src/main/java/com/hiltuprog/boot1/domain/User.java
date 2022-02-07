@@ -58,11 +58,11 @@ public class User {
     private String email;
     
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
-    @OrderBy("id")
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
     		  name = "course_users", 
     		  joinColumns = @JoinColumn(name = "users_id"), 
     		  inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @OrderBy("id")
     private List<Course> courses;
 }

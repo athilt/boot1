@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hiltuprog.boot1.domain.User;
+import com.hiltuprog.boot1.dto.CourseDTO;
 import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.repository.UserRepository;
 import com.hiltuprog.boot1.service.CourseService;
@@ -72,35 +73,23 @@ public class UserResource {
 
     @Autowired
     private  UserService userService;
-    
-    //@Autowired
-    //UserRepository userRepository;
-
-    
-    @Autowired
-    private  CourseService courseService;
-    
+   
     private final UserAssembler assembler;
+    
+    private final CourseAssembler courseAssembler;
 
-    UserResource(UserAssembler assembler) {
+
+    UserResource(UserAssembler assembler, CourseAssembler courseAssembler) {
       this.assembler = assembler;
+      this.courseAssembler = courseAssembler;
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/joincourse/{courseId}/{userId}")
-    public void joinCourse(@PathVariable Long courseId, @PathVariable Long userId) throws Exception {
+    @GetMapping("/addcourse/{courseId}/{userId}")
+    public void addCourse(@PathVariable Long courseId, @PathVariable Long userId) throws Exception {
         log.info("REST request to add user " + userId + " to course " + courseId);
-        courseService.addUser(courseId, userId);
+        userService.addCourse(courseId, userId);
     }
-    
-    @CrossOrigin(origins = "*")
-    @GetMapping("/courses/{userId}")
-    public void courses(@PathVariable Long userId) throws Exception {
-        log.info("REST request to get courses " + userId);
-        //userService.getCourses(userId, userId);
-    }
-    
-
     
     @CrossOrigin(origins = "*")
     @PostMapping("")
@@ -123,7 +112,7 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @CrossOrigin(origins = "*")
-    @GetMapping("/users/bylogin{login}")
+    @GetMapping("/bylogin{login}")
     public ResponseEntity<UserDTO> getUserByLogin(@PathVariable String login) {
         log.info("REST request to get User : {}", login);
         return new ResponseEntity(userService.findByLogin(login)
@@ -152,5 +141,18 @@ public class UserResource {
         		.map(UserDTO::new).map(assembler::toModel).collect(Collectors.toList());
         Link link = WebMvcLinkBuilder.linkTo(UserResource.class).withSelfRel();
         return CollectionModel.of(userList, link);
+    }
+    
+    /* Mapping to DTO's is temporary fix to be removed
+     * 
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping("/courses/{userId}")
+    public CollectionModel<EntityModel<CourseDTO>> courses(@PathVariable Long userId) {
+    	log.info("REST request to get all courses for user " + userId);
+        List <EntityModel<CourseDTO>> itemList = userService.getCourses(userId).stream()
+        		.map(CourseDTO::new).map(courseAssembler::toModel).collect(Collectors.toList());
+        Link link = WebMvcLinkBuilder.linkTo(UserResource.class).withSelfRel();
+        return CollectionModel.of(itemList, link);
     }
 }
