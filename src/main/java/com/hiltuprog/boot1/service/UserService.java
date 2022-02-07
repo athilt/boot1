@@ -11,7 +11,6 @@ import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.Task;
 import com.hiltuprog.boot1.domain.TaskExecution;
 import com.hiltuprog.boot1.domain.User;
-import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.repository.CourseRepository;
 import com.hiltuprog.boot1.repository.TaskExecutionRepository;
 
@@ -44,7 +43,7 @@ public class UserService {
     
     public Optional<User> findById(Long id)
     {
-    	return userRepository.findOneById(id);
+    	return userRepository.findById(id);
     }
     
     public List<User> findAll()
@@ -58,8 +57,8 @@ public class UserService {
   
     public void addCourse(Long courseId, Long userId) {
 		// TODO: Some error checking, please!
-		Course course = courseRepository.findOneById(courseId).get();
-		User user = userRepository.findOneById(userId).get();
+		Course course = courseRepository.findById(courseId).get();
+		User user = userRepository.findById(userId).get();
 		course.getUsers().add(user);
 		// This is the light version.
 		//Task task = course.getTasks().get(0);
@@ -69,21 +68,16 @@ public class UserService {
 		taskExecutionRepository.save(te);
 	}
  
-    public User create(UserDTO dto) {
-        User user = new User();
-        user.setLogin(dto.getLogin().toLowerCase());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
+    public User create(User user) {
         user.setPassword("012345678901234567890123456789012345678901234567890123456789");
-        userRepository.save(user);
-     
+        user = userRepository.save(user);
         log.debug("Created User: {}", user);
         return user;
     }
     
     public List<Course> getCourses(Long userId)
     {
-    	User user =  userRepository.findOneById(userId).get();
+    	User user =  userRepository.findById(userId).get();
     	return user.getCourses();
     }
 }

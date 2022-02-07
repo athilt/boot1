@@ -7,16 +7,16 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import com.hiltuprog.boot1.dto.TaskDTO;
-import com.hiltuprog.boot1.dto.UserDTO;
+import com.hiltuprog.boot1.domain.Task;
+
 
 @Component
-public class TaskAssembler implements RepresentationModelAssembler<TaskDTO, EntityModel<TaskDTO>> {
+public class TaskAssembler implements RepresentationModelAssembler<Task, EntityModel<Task>> {
 	@Override
-	public EntityModel<TaskDTO> toModel(TaskDTO task) {
-		EntityModel<TaskDTO> taskModel = EntityModel.of(task,
+	public EntityModel<Task> toModel(Task item) {
+		EntityModel<Task> taskModel = EntityModel.of(item,
 				//linkTo(methodOn(UserResource.class).one(((com.hiltuprog.boot1.dto.UserDTO) user).getId())).withSelfRel(),
-				linkTo(methodOn(UserResource.class).one(task.getId())).withSelfRel(),
+				linkTo(methodOn(UserResource.class).one(item.getId())).withSelfRel(),
 				linkTo(methodOn(UserResource.class).all()).withRel("tasks"));
 		return taskModel;
 	}

@@ -28,9 +28,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
-import com.hiltuprog.boot1.dto.CourseDTO;
-import com.hiltuprog.boot1.dto.UserDTO;
 import com.hiltuprog.boot1.repository.UserRepository;
 import com.hiltuprog.boot1.service.CourseService;
 import com.hiltuprog.boot1.service.UserService;
@@ -73,16 +72,12 @@ public class UserResource {
 
     @Autowired
     private  UserService userService;
-   
-    private final UserAssembler assembler;
     
-    private final CourseAssembler courseAssembler;
-
-
-    UserResource(UserAssembler assembler, CourseAssembler courseAssembler) {
-      this.assembler = assembler;
-      this.courseAssembler = courseAssembler;
-    }
+    @Autowired
+    private UserAssembler userAssembler;
+    
+    @Autowired
+    private CourseAssembler courseAssembler;
 
     @CrossOrigin(origins = "*")
     @GetMapping("/addcourse/{courseId}/{userId}")
@@ -93,15 +88,15 @@ public class UserResource {
     
     @CrossOrigin(origins = "*")
     @PostMapping("")
-    public ResponseEntity<User> create(@Valid @RequestBody UserDTO userDTO) throws Exception {
-        log.info("REST request to create User : {}", userDTO.toString());
-        if (userDTO.getId() != null) {
+    public ResponseEntity<User> create(@Valid @RequestBody User user) throws Exception {
+        log.info("REST request to create User : ", user.toString());
+        if (user.getId() != null) {
             throw new Exception("A new user cannot already have an ID");
         } else {
-            User newUser = userService.create(userDTO);
+            user = userService.create(user);
             return ResponseEntity.created(new URI("/api/users/"))
                     //.headers(HeaderUtil..createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
-                    .body(newUser);
+                    .body(user);
         }
     }
 
@@ -113,10 +108,9 @@ public class UserResource {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/bylogin{login}")
-    public ResponseEntity<UserDTO> getUserByLogin(@PathVariable String login) {
+    public ResponseEntity<User> getUserByLogin(@PathVariable String login) {
         log.info("REST request to get User : {}", login);
-        return new ResponseEntity(userService.findByLogin(login)
-        .map(UserDTO::new), HttpStatus.OK);
+        return new ResponseEntity(userService.findByLogin(login), HttpStatus.OK);
     }
     
     /**
@@ -127,31 +121,31 @@ public class UserResource {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/{id}")
-    public EntityModel<UserDTO> one(@PathVariable Long id) {
+    public EntityModel<User> one(@PathVariable Long id) {
         log.info("REST request to get User : {}", id);
-        UserDTO user = new UserDTO(userService.findById(id).get()); // .orElseThrow(() -> new Exception(Long.toString(id)));
-        return assembler.toModel(user);
+        User user = userService.findById(id).get(); // .orElseThrow(() -> new Exception(Long.toString(id)));
+        return userAssembler.toModel(user);
     }
     
     @CrossOrigin(origins = "*")
     @GetMapping("")
-    public CollectionModel<EntityModel<UserDTO>> all() {
-    	log.info("REST request to get all users : {}" + " applicationName: " + applicationName );
-        List <EntityModel<UserDTO>> userList = userService.findAll().stream()
-        		.map(UserDTO::new).map(assembler::toModel).collect(Collectors.toList());
-        Link link = WebMvcLinkBuilder.linkTo(UserResource.class).withSelfRel();
-        return CollectionModel.of(userList, link);
-    }
+    public CollectionModel<EntityModel<User>> all() {
+		log.info("REST request to get all users : " + " applicationName: " + applicationName);
+		List<EntityModel<User>> items = userService.findAll().stream()
+				.map(userAssembler::toModel).collect(Collectors.toList());
+		Link link = WebMvcLinkBuilder.linkTo(CourseResource.class).withSelfRel();
+		return CollectionModel.of(items, link);
+	}
     
     /* Mapping to DTO's is temporary fix to be removed
      * 
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/courses/{userId}")
-    public CollectionModel<EntityModel<CourseDTO>> courses(@PathVariable Long userId) {
+    public CollectionModel<EntityModel<Course>> courses(@PathVariable Long userId) {
     	log.info("REST request to get all courses for user " + userId);
-        List <EntityModel<CourseDTO>> itemList = userService.getCourses(userId).stream()
-        		.map(CourseDTO::new).map(courseAssembler::toModel).collect(Collectors.toList());
+        List <EntityModel<Course>> itemList = userService.getCourses(userId).stream()
+        		.map(courseAssembler::toModel).collect(Collectors.toList());
         Link link = WebMvcLinkBuilder.linkTo(UserResource.class).withSelfRel();
         return CollectionModel.of(itemList, link);
     }

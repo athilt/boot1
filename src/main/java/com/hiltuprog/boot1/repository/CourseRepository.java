@@ -17,10 +17,5 @@ import com.hiltuprog.boot1.domain.User;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
-	List<Course> findByUsersId(Long userId);
-	
-	Optional<Course> findOneById(Long courseId);
-	
-	//Optional<Course> save(Course course);
-	
+			
 }

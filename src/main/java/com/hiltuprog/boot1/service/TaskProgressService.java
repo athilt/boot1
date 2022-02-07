@@ -31,15 +31,11 @@ public class TaskProgressService {
 		this.taskProgressRepository = taskProgressRepository;
 	}
     
-    public TaskProgress create(TaskProgressDTO dto)
+    public TaskProgress create(TaskProgress item)
     {
-    	TaskProgress taskProgress = new TaskProgress();
-    	taskProgress.setTitle(dto.getTitle());
-    	taskProgress.setContent(dto.getContent());
-    	taskProgressRepository.save(taskProgress);
-    	return taskProgress;
+    	return taskProgressRepository.save(item);
     }
-
+    
     public List<TaskProgress> findAll() {
 	     return taskProgressRepository.findAll(); 
 	  }

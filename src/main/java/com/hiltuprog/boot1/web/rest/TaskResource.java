@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hiltuprog.boot1.domain.Task;
 import com.hiltuprog.boot1.domain.TaskProgress;
 import com.hiltuprog.boot1.dto.CourseDTO;
 import com.hiltuprog.boot1.dto.TaskDTO;
@@ -51,9 +52,9 @@ public class TaskResource {
 
 	@CrossOrigin(origins = "*")
 	@GetMapping("")
-	public CollectionModel<EntityModel<TaskDTO>> all() {
+	public CollectionModel<EntityModel<Task>> all() {
 		log.info("REST request to get all Courses : {}" + " applicationName: " + applicationName);
-		List<EntityModel<TaskDTO>> dtoList = taskService.findAll().stream().map(TaskDTO::new)
+		List<EntityModel<Task>> dtoList = taskService.findAll().stream()
 				.map(assembler::toModel).collect(Collectors.toList());
 		Link link = WebMvcLinkBuilder.linkTo(CourseResource.class).withSelfRel();
 		return CollectionModel.of(dtoList, link);
@@ -61,20 +62,20 @@ public class TaskResource {
 	
 	@CrossOrigin(origins = "*")
 	@GetMapping("/{id}")
-	public ResponseEntity<TaskDTO> one(@PathVariable Long id) {
+	public ResponseEntity<Task> one(@PathVariable Long id) {
 		log.info("GET request to get Task : {}", id);
-		return new ResponseEntity(taskService.findById(id).map(TaskDTO::new), HttpStatus.OK);
+		return new ResponseEntity(taskService.findById(id), HttpStatus.OK);
 	}
 	
 	@CrossOrigin(origins = "*")
 	@PostMapping("")
-	public ResponseEntity<TaskDTO> create(@Valid @RequestBody TaskDTO dto) throws Exception {
-		log.info("POST request to save TaskProgress : {}", dto);
-		if (dto.getId() != null) {
+	public ResponseEntity<Task> create(@Valid @RequestBody Task item) throws Exception {
+		log.info("POST request to save TaskProgress ", item);
+		if (item.getId() != null) {
 			throw new Exception("A new TaskProgress cannot already have an ID");
 		}
-		taskService.create(dto);
+		item = taskService.create(item);
 		return ResponseEntity.created(new URI("/api/tasks/"))
-				.body(dto);
+				.body(item);
 	}
 }

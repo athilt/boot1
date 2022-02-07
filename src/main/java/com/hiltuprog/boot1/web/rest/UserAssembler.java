@@ -6,16 +6,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
-
-import com.hiltuprog.boot1.dto.UserDTO;
+import com.hiltuprog.boot1.domain.User;
 
 @Component
-public class UserAssembler implements RepresentationModelAssembler<UserDTO, EntityModel<UserDTO>> {
+public class UserAssembler implements RepresentationModelAssembler<User, EntityModel<User>> {
 	@Override
-	public EntityModel<UserDTO> toModel(UserDTO dto) {
-		EntityModel<UserDTO> model = EntityModel.of(dto,
+	public EntityModel<User> toModel(User item) {
+		EntityModel<User> model = EntityModel.of(item,
 				//linkTo(methodOn(UserResource.class).one(((com.hiltuprog.boot1.dto.UserDTO) user).getId())).withSelfRel(),
-				linkTo(methodOn(UserResource.class).one(dto.getId())).withSelfRel(),
+				linkTo(methodOn(UserResource.class).one(item.getId())).withSelfRel(),
 				linkTo(methodOn(UserResource.class).all()).withRel("users"));
 		return model;
 	}

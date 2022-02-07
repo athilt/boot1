@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +28,9 @@ public class TaskService {
 
     private final Logger log = LoggerFactory.getLogger(TaskService.class);
 
-    private final TaskRepository taskRepository;
+    @Autowired
+    private TaskRepository taskRepository;
 
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
-    
     public List<Task> findAll() {
 	     return taskRepository.findAll(); 
 	  }
@@ -41,14 +39,9 @@ public class TaskService {
     {
     	return taskRepository.findById(id);
     }
-    
-    public Task create(TaskDTO dto) {
-        Task task = new Task();
-        task.setId(dto.getId());
-        task.setTitle(dto.getTitle());
-        taskRepository.save(task);
-        log.debug("Saved task: {}", task);
-        return task;
+
+    public Task create(Task task) {
+        return taskRepository.save(task);
     }
-    
+
 }

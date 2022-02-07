@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hiltuprog.boot1.domain.TaskProgress;
-import com.hiltuprog.boot1.dto.CourseDTO;
-import com.hiltuprog.boot1.dto.TaskProgressDTO;
 import com.hiltuprog.boot1.service.TaskProgressService;
 
 @RestController
@@ -49,19 +47,19 @@ public class TaskProgressResource {
 
     @CrossOrigin(origins = "*")
 	@GetMapping("")
-	public CollectionModel<EntityModel<TaskProgressDTO>> all() {
+	public CollectionModel<EntityModel<TaskProgress>> all() {
 		log.info("REST request to get all TaskProgresses : {}" + " applicationName: " + applicationName);
-		List<EntityModel<TaskProgressDTO>> dtoList = taskProgressService.findAll().stream().map(TaskProgressDTO::new)
+		List<EntityModel<TaskProgress>> itemList = taskProgressService.findAll().stream()
 				.map(assembler::toModel).collect(Collectors.toList());
 		Link link = WebMvcLinkBuilder.linkTo(CourseResource.class).withSelfRel();
-		return CollectionModel.of(dtoList, link);
+		return CollectionModel.of(itemList, link);
 	}
     
     @CrossOrigin(origins = "*")
 	@GetMapping("/{id}")
-	public EntityModel<TaskProgressDTO> one(@PathVariable Long id) {
-    	TaskProgressDTO one = new TaskProgressDTO(taskProgressService.findById(id).get()); // .orElseThrow(() -> new															// Exception(Long.toString(id)));
-		return assembler.toModel(one);
+	public EntityModel<TaskProgress> one(@PathVariable Long id) {
+    	TaskProgress item = taskProgressService.findById(id).get(); // .orElseThrow(() -> new															// Exception(Long.toString(id)));
+		return assembler.toModel(item);
 	}
 /*
     @CrossOrigin(origins = "*")
@@ -74,13 +72,13 @@ public class TaskProgressResource {
    */
     @CrossOrigin(origins = "*")
 	@PostMapping("")
-	public ResponseEntity<TaskProgressDTO> create(@Valid @RequestBody TaskProgressDTO taskProgressDTO) throws Exception {
-		log.info("POST request to save TaskProgress : {}", taskProgressDTO);
-		if (taskProgressDTO.getId() != null) {
+	public ResponseEntity<TaskProgress> create(@Valid @RequestBody TaskProgress taskProgress) throws Exception {
+		log.info("POST request to save TaskProgress : ", taskProgress);
+		if (taskProgress.getId() != null) {
 			throw new Exception("A new TaskProgress cannot already have an ID");
 		}
-		TaskProgress newTaskProgress = taskProgressService.create(taskProgressDTO);
+		taskProgress = taskProgressService.create(taskProgress);
 		return ResponseEntity.created(new URI("/api/progress/"))
-				.body(taskProgressDTO);
+				.body(taskProgress);
 	}
 }

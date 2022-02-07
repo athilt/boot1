@@ -5,12 +5,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,10 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.Curriculum;
-import com.hiltuprog.boot1.dto.CourseDTO;
-import com.hiltuprog.boot1.dto.CurriculumDTO;
 import com.hiltuprog.boot1.service.CurriculumService;
 
 @RestController
@@ -40,36 +42,40 @@ public class CurriculumResource {
 
     @Autowired
     private CurriculumService curriculumService;
+    
+    @Autowired
+	private CurriculumAssembler assembler;
 
     @CrossOrigin(origins = "*")
     @GetMapping("/{id}")
-    public ResponseEntity<CurriculumDTO> getCurriculum(@PathVariable Long id) {
+    public ResponseEntity<Curriculum> one(@PathVariable Long id) {
         log.info("REST request to get Curriculum : {}", id);
-        return new ResponseEntity(curriculumService.findOneById(id)
-        .map(CurriculumDTO::new), HttpStatus.OK);
+        return new ResponseEntity(curriculumService.findById(id).get(), HttpStatus.OK);
     }
-    
-    @CrossOrigin(origins = "*")
-    @GetMapping("")
-    public ResponseEntity<CurriculumDTO> getAllCurriculums() {
-        log.info("REST request to get all Curriculums : {}");
-        return new ResponseEntity(curriculumService.findAll().stream()
-        		.map(CurriculumDTO::new).collect(Collectors.toList()), HttpStatus.OK);
-    }
-    
+      
     @CrossOrigin(origins = "*")
     @PostMapping("")
-    public ResponseEntity<Curriculum> createCurriculum(@Valid @RequestBody CurriculumDTO curriculumDTO) throws Exception {
-        log.info("REST request to create Curriculum : {}", curriculumDTO);
+    public ResponseEntity<Curriculum> create(@Valid @RequestBody Curriculum curriculum) throws Exception {
+        log.info("REST request to create Curriculum : {}", curriculum);
 
-        if (curriculumDTO.getId() != null) {
+        if (curriculum.getId() != null) {
             throw new Exception("A new course cannot already have an ID");
         } else {
-        	Curriculum newCurriculum = curriculumService.createCurriculum(curriculumDTO);
-            return ResponseEntity.created(new URI("/api/curriculums/"))
+            return ResponseEntity.created(new URI("/api/curriculums/foo"))
                     //.headers(HeaderUtil..createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
-                    .body(newCurriculum);
+                    .body(curriculum);
         }
+    }
+    
+    @CrossOrigin(origins = "*")
+	@GetMapping("")
+	public CollectionModel<EntityModel<Curriculum>> all() {
+		log.info("REST request to get all curriculums : {}" + " applicationName: " + applicationName);
+		List<EntityModel<Curriculum>> items = curriculumService.findAll().stream()
+				//.map(Course::new)
+				.map(assembler::toModel).collect(Collectors.toList());
+		Link link = WebMvcLinkBuilder.linkTo(CourseResource.class).withSelfRel();
+		return CollectionModel.of(items, link);
     }
  
     @CrossOrigin(origins = "*")

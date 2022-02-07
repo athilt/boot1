@@ -36,22 +36,16 @@ public class CurriculumService {
 		this.curriculumRepository = curriculumRepository;
 	}
 
-	public Curriculum createCurriculum(CurriculumDTO curriculumDTO) {
-		Curriculum curriculum = new Curriculum();
-		curriculum.setDescription(curriculumDTO.getDescription());
-
-		curriculumRepository.save(curriculum);
-
-		log.debug("Created Course: ", curriculum);
-		return curriculum;
+	public Curriculum create(Curriculum curriculum) {
+		return curriculumRepository.save(curriculum);
 	}
 
 	public List<Curriculum> findAll() {
 		return curriculumRepository.findAll();
 	}
 
-	public Optional<Curriculum> findOneById(Long id) {
-		return curriculumRepository.findOneById(id);
+	public Optional<Curriculum> findById(Long id) {
+		return curriculumRepository.findById(id);
 	}
 	
 	public void addCourse(Long curriculumId, Long courseId)

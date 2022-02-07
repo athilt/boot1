@@ -12,7 +12,4 @@ import com.hiltuprog.boot1.domain.Curriculum;
  */
 @Repository
 public interface CurriculumRepository extends JpaRepository<Curriculum, Long> {
-
-    Optional<Curriculum> findOneById(Long id);
-    List<Curriculum> findAll();
 }

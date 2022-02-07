@@ -38,12 +38,6 @@ public class User {
     @Column(length = 50, unique = true, nullable = false)
     private String login;
 	
-	@JsonIgnore
-    @NotNull
-    @Size(min = 60, max = 60)
-    @Column(name = "password_hash", length = 60, nullable = false)
-    private String password;
-
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
     private String firstName;
@@ -65,4 +59,10 @@ public class User {
     		  inverseJoinColumns = @JoinColumn(name = "course_id"))
     @OrderBy("id")
     private List<Course> courses;
+
+    @JsonIgnore
+    @NotNull
+    @Size(min = 60, max = 60)
+    @Column(name = "password_hash", length = 60, nullable = false)
+    private String password;
 }

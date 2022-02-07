@@ -8,16 +8,17 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 import com.hiltuprog.boot1.domain.Course;
+import com.hiltuprog.boot1.domain.Curriculum;
 import com.hiltuprog.boot1.domain.TaskProgress;
 import com.hiltuprog.boot1.dto.CourseDTO;
 
 @Component
-public class CourseAssembler implements RepresentationModelAssembler<Course, EntityModel<Course>> {
+public class CurriculumAssembler implements RepresentationModelAssembler<Curriculum, EntityModel<Curriculum>> {
 	@Override
-	public EntityModel<Course> toModel(Course item) {
-		EntityModel<Course> model = EntityModel.of(item,
+	public EntityModel<Curriculum> toModel(Curriculum item) {
+		EntityModel<Curriculum> model = EntityModel.of(item,
 				linkTo(methodOn(CourseResource.class).one(item.getId())).withSelfRel(),
-				linkTo(methodOn(CourseResource.class).all()).withRel("courses"));	
+				linkTo(methodOn(CourseResource.class).all()).withRel("curriculums"));	
 		return model;
 	}
 }

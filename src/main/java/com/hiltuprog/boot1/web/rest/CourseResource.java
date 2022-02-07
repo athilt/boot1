@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hiltuprog.boot1.domain.Course;
 import com.hiltuprog.boot1.domain.User;
-import com.hiltuprog.boot1.dto.CourseDTO;
 import com.hiltuprog.boot1.service.CourseService;
 
 //import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -87,50 +86,39 @@ public class CourseResource {
 
 	@CrossOrigin(origins = "*")
 	@PostMapping("")
-	public ResponseEntity<Course> create(@Valid @RequestBody CourseDTO courseDTO) throws Exception {
-		log.info("REST request to save Course : {}", courseDTO);
-		if (courseDTO.getId() != null) {
+	public ResponseEntity<Course> create(@Valid @RequestBody Course course) throws Exception {
+		log.info("REST request to save Course : ", course);
+		if (course.getId() != null) {
 			throw new Exception("A new course cannot already have an ID");
 		}
-		Course newCourse = courseService.createCourse(courseDTO);
+		course  = courseService.create(course);
 		return ResponseEntity.created(new URI("/api/courses/"))
 				// .headers(HeaderUtil..createAlert(applicationName, "userManagement.created",
 				// newUser.getLogin()))
-				.body(newCourse);
+				.body(course);
 	}
 
 	@CrossOrigin(origins = "*")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Course> courses(@Valid @RequestBody CourseDTO courseDTO, @PathVariable Long id)
+	public void delete(@Valid @RequestBody Course course, @PathVariable Long id)
 			throws Exception {
-		log.info("REST request to delete Course : {}", courseDTO);
-
-		if (courseDTO.getId() == null) {
-			courseDTO.setId(id);
-			if (courseDTO.getId() == null) {
-				throw new Exception("Course not found.");
-			}
-		}
-		Course newCourse = courseService.deleteCourse(courseDTO);
-		return ResponseEntity.created(new URI("/api/users/"))
-				// .headers(HeaderUtil..createAlert(applicationName, "userManagement.created",
-				// newUser.getLogin()))
-				.body(newCourse);
-
+		log.info("REST request to delete Course : {}", course);
+		courseService.delete(course);
 	}
 
 	@CrossOrigin(origins = "*")
 	@GetMapping("/{id}")
-	public EntityModel<CourseDTO> one(@PathVariable Long id) {
-		CourseDTO one = new CourseDTO(courseService.findById(id).get()); // .orElseThrow(() -> new															// Exception(Long.toString(id)));
+	public EntityModel<Course> one(@PathVariable Long id) {
+		Course one = courseService.findById(id).get(); // .orElseThrow(() -> new															// Exception(Long.toString(id)));
 		return assembler.toModel(one);
 	}
 
 	@CrossOrigin(origins = "*")
 	@GetMapping("")
-	public CollectionModel<EntityModel<CourseDTO>> all() {
+	public CollectionModel<EntityModel<Course>> all() {
 		log.info("REST request to get all Courses : {}" + " applicationName: " + applicationName);
-		List<EntityModel<CourseDTO>> items = courseService.findAll().stream().map(CourseDTO::new)
+		List<EntityModel<Course>> items = courseService.findAll().stream()
+				//.map(Course::new)
 				.map(assembler::toModel).collect(Collectors.toList());
 		Link link = WebMvcLinkBuilder.linkTo(CourseResource.class).withSelfRel();
 		return CollectionModel.of(items, link);

@@ -14,5 +14,4 @@ import com.hiltuprog.boot1.domain.User;
 @Repository
 public interface TaskExecutionRepository extends JpaRepository<TaskExecution, Long> {
 
-    Optional<TaskExecution> findOneById(Long id);
 }
